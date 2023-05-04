@@ -6,10 +6,10 @@ from minigrid.core.mission import MissionSpace
 
 DIRS = ['north', 'east', 'south', 'west']
 DIR_VECS = np.array([
-    [1, 0],
     [0, 1],
+    [1, 0],
+    [0, -1],
     [-1, 0],
-    [0, -1]
 ], dtype=np.float_)
 
 class AntDirEnv(AntEnv):
