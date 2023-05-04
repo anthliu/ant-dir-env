@@ -65,8 +65,10 @@ class AntDirEnv(AntEnv):
     ):
         ob, infos = super().reset(*args, seed=seed, options=options)
         self.goal_id = np.random.choice(len(DIRS))
-        self.goal = DIRS[self.goal_id]
+        self.goal = self._gen_mission(DIRS[self.goal_id])
+        self.tags = [DIRS[self.goal_id]]
         self.goal_vec = DIR_VECS[self.goal_id]
+        infos['tags'] = self.tags
         return {
             'state': ob,
             'mission': self.goal,
@@ -103,6 +105,7 @@ class AntDirEnv(AntEnv):
             "distance_from_origin": np.linalg.norm(xy_position_after, ord=2),
             "x_velocity": x_velocity,
             "y_velocity": y_velocity,
+            "tags": self.tags
         })
         if self._use_contact_forces:
             contact_cost = self.contact_cost
