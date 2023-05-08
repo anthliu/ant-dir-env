@@ -60,11 +60,15 @@ class AntDirEnv(AntEnv):
     def reset(
         self,
         *args,
+        task_id: Optional[int] = None,
         seed: Optional[int] = None,
         options: Optional[dict] = None,
     ):
         ob, infos = super().reset(*args, seed=seed, options=options)
-        self.goal_id = np.random.choice(len(DIRS))
+        if task_id is None:
+            self.goal_id = np.random.choice(len(DIRS))
+        else:
+            self.goal_id = task_id % len(DIRS)
         self.goal = self._gen_mission(DIRS[self.goal_id])
         self.tags = [DIRS[self.goal_id]]
         self.goal_vec = DIR_VECS[self.goal_id]
