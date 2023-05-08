@@ -60,11 +60,11 @@ class AntDirEnv(AntEnv):
     def reset(
         self,
         *args,
-        task_id: Optional[int] = None,
         seed: Optional[int] = None,
         options: Optional[dict] = None,
     ):
         ob, infos = super().reset(*args, seed=seed, options=options)
+        task_id = None if options is None else options.get('task_id', None)
         if task_id is None:
             self.goal_id = np.random.choice(len(DIRS))
         else:
