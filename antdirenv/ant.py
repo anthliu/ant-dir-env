@@ -25,6 +25,7 @@ class AntDirEnv(AntEnv):
         contact_force_range=(-1.0, 1.0),
         reset_noise_scale=0.1,
         exclude_current_positions_from_observation=True,
+        floor_reward=False,
         **kwargs,
     ):
         super().__init__(
@@ -40,6 +41,7 @@ class AntDirEnv(AntEnv):
             exclude_current_positions_from_observation=exclude_current_positions_from_observation,
             **kwargs
         )
+        self.floor_reward = floor_reward
 
         mission_space = MissionSpace(
             mission_func=self._gen_mission,
@@ -86,7 +88,8 @@ class AntDirEnv(AntEnv):
             'reward_forward': dir_reward,
             "reward_survive": healthy_reward,
         }
-        return dir_reward + healthy_reward, infos
+        reward = dir_reward + healthy_reward
+        return reward, infos
 
     def step(self, action):
         xy_position_before = self.get_body_com("torso")[:2].copy()
@@ -126,5 +129,8 @@ class AntDirEnv(AntEnv):
             'mission': self.goal,
             'mission_id': self.goal_id,
         }
+
+        if self.floor_reward:
+            reward = max(0, reward)
 
         return ob, reward, terminated, False, info

@@ -16,6 +16,6 @@ def shuffle(env):
     print(f'T = {T}')
 
 if __name__ == "__main__":
-    env = gym.make('AntDir', render_mode='human')
+    env = gym.make('AntDir-v1', render_mode='human')
 
     shuffle(env)
